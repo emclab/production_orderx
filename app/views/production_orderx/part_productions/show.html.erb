@@ -1,0 +1,76 @@
+<% if @view_in_config && @erb_code %>
+  <%= render inline: ERB.new(@erb_code).result(binding) %>
+  
+<% else %>
+<div id="main_body">
+<h4><%=@title %></h4>
+
+<p>
+  <b>#</b>
+  <%= @part_production.id %>
+</p>
+<p>
+  <b><%= t('Part Name') %></b>
+  <%= @part_production.part_name %>
+</p>
+<p>
+  <b><%= t('Drawing#') %></b>
+  <%= @part_production.drawing_num %>
+</p>
+<p>
+  <b><%= t('Requirement') %></b>
+  <%= @part_production.requirement %>
+</p>
+<p>
+  <b><%= t('Qty')  %></b>
+  <%= @part_production.qty %>
+</p>
+<p>
+  <b><%= t('Start Date') %></b>
+  <%= @part_production.start_date.strftime("%Y/%m/%d") %>
+</p>
+<p>
+  <b><%= t('Finish Date') %></b>
+  <%= @part_production.finish_date.strftime("%Y/%m/%d") %>
+</p>
+<p>
+  <b><%= t('Qty Produced')  %></b>
+  <%= @part_production.qty_produced %>
+</p>
+<p>
+  <b><%= t('Actual Finish Date') %></b>
+  <%= @part_production.actual_finish_date.strftime("%Y/%m/%d") if @part_production.actual_finish_date.present? %>
+</p>
+<p>
+  <b><%= t('Void') %></b>
+  <%= @part_production.void ? t('Yes') : t('No') %>
+</p>
+<p>
+  <b><%= t('Completed') %></b>
+  <%= @part_production.completed ? t('Yes') : t('No') %>
+</p>
+<p>
+  <b><%= t('Last Updated By') %></b>
+  <%= @part_production.last_updated_by.name if @part_production.last_updated_by_id.present? %>
+</p>
+<p>
+  <b>LOG：</b>
+  <% Commonx::Log.where('resource_id = ? AND resource_name = ?', @part_production.id, params[:controller].sub('/', '_')).order("created_at DESC").each do |t| %>
+    <li><%= t.created_at.strftime("%Y/%m/%d") %>,&nbsp; <%= t.last_updated_by.name %>,&nbsp; <%= t.log %> </li>
+  <% end %>
+</p>
+
+	<table class="table table-striped">
+	  <tr>
+	    <th>
+  			<%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :id => 'close', :class => BUTTONS_CLS['action'] %>
+  			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  			<%= link_to t('New Log'), SUBURI + commonx.new_log_path(:resource_id => @part_production.id, :resource_name => params[:controller], :subaction => 'order', :format => :js), :remote => true, 
+                          :id => 'new_log_link', :class => BUTTONS_CLS['action'] if has_action_right?('create_order', 'commonx/logs') %> 
+        </th>
+	  </tr>
+	</table> 
+	  	
+</div>
+
+<% end %>

@@ -1,0 +1,26 @@
+<% if @view_in_config && @erb_code %>
+  <%= render inline: @erb_code %>
+  
+<% else %>
+<%= simple_form_for @production_step do |f| %>    
+
+  <%= f.input :qty_in, :label => t("Qty In"), :readonly => readonly?(@production_step, 'qty_in') %>
+  <%= f.input :qty_out, :label => t("Qty Out"), :readonly => readonly?(@production_step, 'qty_out') %>
+  <% if readonly?(@production_step, 'step_status_id')%>
+    <%= f.input :step_status_noupdate, :label => t("Production Step"), :input_html => {:value => @production_step.step_status.name} %>
+  <% else %>
+    <%= f.input :step_status_id, :label => t("Production Step"), :collection => Commonx::CommonxHelper.return_misc_definitions('mfg_batch_status'), :label_method => :name, :value_method => :id %>
+  <% end %> 
+  <%= f.input :ontime_indicator, :label => t('On Time'), :collection => [[t('Green - on time'),'green'], [t('Yellow - little hehind'), 'yellow'], [t('Red - late'), 'red']] unless readonly?(@production_step, 'ontime_indicator')%>   
+  <%= f.input :ontime_indicator_noupdate, :label => t('On Time'), :input_html => {:value => @production_step.ontime_indicator } if readonly?(@production_step, 'ontime_indicator')%>
+  <%= f.input :brief_note, :label => t("Brief Note"), :input_html => {:rows => 1}, :readonly => readonly?(@production_step, 'brief_note') %> 
+    
+  <%= link_to t('Back'), production_steps_path(part_production_id: @part_production.id), :class => BUTTONS_CLS['action'] %>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <%= f.button :submit, t('Save'), :class => BUTTONS_CLS['action'] %> 
+<% end %>
+   
+
+<% end %>
+
+

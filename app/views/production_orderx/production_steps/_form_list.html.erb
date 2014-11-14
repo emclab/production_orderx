@@ -1,0 +1,48 @@
+<% if @view_in_config && @erb_code %>
+  <%= render inline: ERB.new(@erb_code).result(binding) %>
+  
+<% else %>
+<div class="pagination"><%= will_paginate models %></div>
+
+    <table class="table table-striped">
+		<tr>
+			<th><%= t('Create Date') %></th>
+			<th><%= t('Production Step') %></th>
+			<th><%= t('On Time') %></th>	
+			<th><%= t('Qty In') %></th>
+			<th><%= t('Qty Out') %></th>
+			<th><%= t('Brief Note') %></th>	
+			<th><%= t('Last Updated By') %></th>
+			<th></th>
+			
+		</tr>
+		<% models.each do |r| %>
+		  <tr>
+		  	
+		  	<td><%= r.created_at.strftime("%Y/%m/%d::%I%P") %></td>
+			<td><%= prt(r, 'step_status.name') %></td>
+			<td><%= image_tag(params[:controller][/.+\//]+ (RED_GREEN_YELLOW_CLS[r.ontime_indicator] ? '' : RED_GREEN_YELLOW_CLS[r.ontime_indicator]), size: '23x23') if r.ontime_indicator.present? %></td>
+			<td><%= prt(r, :qty_in) %></td>
+			<td><%= prt(r, :qty_out) %></td>
+			<td><%= prt(r, :brief_note) %></td>
+			<td><%= prt(r, 'last_updated_by.name') if r.last_updated_by_id.present? %></td>    
+			<td><%= link_to t('Edit'), edit_production_step_path(r, :format => :js), :remote => true, :class => BUTTONS_CLS['action']  if has_action_right?('update', params[:controller], r) %></td>
+			
+		  </tr>
+		<% end %>
+	</table>
+	
+	<table class="table table-striped">
+	  <tr>
+	    <th>
+	    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	    	<%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'], :id => 'close'  %>
+	    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	    	<%= link_to t('Next Step'), new_production_step_path(:part_productin_id => @part_production.id, :format => :js), :remote => true, :id => 'new_log_link',
+	    	                            :class => BUTTONS_CLS['action']  if @part_production && has_action_right?('create', params[:controller], @part_production) %>
+	    </th>
+	  </tr>
+	</table>
+
+<% end %>	
+

@@ -1,0 +1,62 @@
+<% if @view_in_config && @erb_code %>
+  <%= render inline: ERB.new(@erb_code).result(binding) %>
+  
+<% else %>
+<div class="pagination"><%= will_paginate models %></div>
+    <table class="table table-striped">
+		<tr>
+			<th><%= t('#') %></th>
+			<th><%= t('Product Name')%></th>
+			<th><%= t('Drawing#')%></th>
+			<th><%= t('Start Date') %></th>
+			<th><%= t('Qty') %></th>	
+			<th><%= t('Finish Date') %></th>
+			<th><%= t('Qty Produced') %></th>	
+            <th><%= t('Batch Status') %></th>
+            <th><%= t('On Time') %></th>
+            <th><%= t('Step Qty') %></th>
+            <th><%= t('Completed') %></th>
+			<th><%= t('Last Updated By') %></th>
+			<th></th>
+			<th></th>
+			
+		</tr>
+		<% models.each do |r| %>
+		  <tr>
+		  	<% unless has_action_right?('show', params[:controller], r) %>
+		  	  <td><%= prt(r, :id) %></td>
+		  	<% else %>
+		  	  <td><%= link_to r.id.to_s, SUBURI + "/authentify/view_handler?index=1&url=#{part_production_path(r)}" %></td>
+		  	<% end %>
+		  	<td><%= prt(r, :part_name) %></td>
+		  	<td><%= prt(r, :drawing_num) %></td>
+		  	<td><%= r.start_date.strftime("%Y/%m/%d") %></td>
+		  	<td><%= prt(r, :qty) %></td>
+			<td><%= r.finish_date.strftime("%Y/%m/%d") if r.finish_date.present? %></td>
+			<td><%= prt(r, :qty_produced) %></td> 
+			<td><%= r.production_steps.last.step_status.name if r.production_steps.present? %></td>
+            <td><%= image_tag(params[:controller][/.+\//]+RED_GREEN_YELLOW_CLS[r.production_steps.last.ontime_indicator], size: '23x23') if r.production_steps.present? && r.production_steps.last.ontime_indicator.present? %></td>
+            <td><%= r.production_steps.last.qty_in if r.production_steps.present? %></td>
+			<td><%= r.completed ? t('Yes') : t('No') %></td>
+			<td><%= prt(r, 'last_updated_by.name') if r.last_updated_by_id.present? %></td>    
+			<td><%= link_to t('Production Steps'), SUBURI + "/authentify/view_handler?index=1&url=#{production_steps_path(:part_production_id => r.id)}", :class => BUTTONS_CLS['action']  %></td>
+		    <td><%= link_to t('Edit'), SUBURI + "/authentify/view_handler?index=1&url=#{edit_part_production_path(r)}", :class => BUTTONS_CLS['action']  if has_action_right?('update', params[:controller], r) %></td>
+			
+		  </tr>
+		<% end %>
+	</table>
+	
+	<table class="table table-striped">
+	  <tr>
+	    <th>
+	    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	    	<%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action']  %>
+	    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	    	<%= link_to t('New Part Production'), SUBURI + "/authentify/view_handler?index=1&url=#{CGI::escape new_part_production_path() }", :class => BUTTONS_CLS['action']  if has_action_right?('create', params[:controller]) %>
+	        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	        <%= link_to t('Search'), SUBURI + "/authentify/view_handler?index=1&url=#{search_part_productions_path}", :class => BUTTONS_CLS['action'] if has_action_right?('search', params[:controller]) %>    	
+	    </th>
+	  </tr>
+	</table>
+
+<% end %>	

@@ -1,0 +1,20 @@
+<% if @view_in_config && @erb_code %>
+  <%= render inline: @erb_code %>
+  
+<% else %>
+<%= simple_form_for @part_production do |f| %>    
+
+  <%= f.input :part_name, :label => t("Part Name") %> 
+  <%= f.input :drawing_num, :label => t("Drawing#") %> 
+  <%= f.input :part_num, :label => t("Part#") %> 
+  <%= f.input :requirement, :label => t("Requirement"), :input_html => {:rows => 2} %> 
+  <%= f.input :qty, :label => t("Qty") %>
+  <%= f.input :start_date, :label => t("Start Date"), :as => :string %> 
+  <%= f.input :finish_date, :label => t("Finish Date"), :as => :string %> 
+  
+  <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <%= f.button :submit, I18n.t('Save'), :class => BUTTONS_CLS['action'] %>  
+<% end %>
+
+<% end %>
