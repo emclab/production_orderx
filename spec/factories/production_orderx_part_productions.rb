@@ -3,7 +3,7 @@
 FactoryGirl.define do
   factory :production_orderx_part_production, :class => 'ProductionOrderx::PartProduction' do
     part_name "MyString"
-    part_num "MyString"
+    batch_num "MyString"
     drawing_num "MyString"
     requirement "MyText"
     start_date "2014-11-11"

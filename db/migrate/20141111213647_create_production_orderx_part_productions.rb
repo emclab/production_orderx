@@ -18,13 +18,14 @@ class CreateProductionOrderxPartProductions < ActiveRecord::Migration
       t.integer :order_manager_id
       t.date :actual_finish_date
       t.string :wf_state
-      
+      t.string :batch_num
+            
       t.timestamps
     end
     
     add_index :production_orderx_part_productions, :part_name
     add_index :production_orderx_part_productions, :drawing_num
-    add_index :production_orderx_part_productions, :part_num
+    add_index :production_orderx_part_productions, :batch_num
     add_index :production_orderx_part_productions, :order_manager_id
     add_index :production_orderx_part_productions, :customer_id
     add_index :production_orderx_part_productions, :completed

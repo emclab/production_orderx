@@ -5,7 +5,7 @@
 <div class="pagination"><%= will_paginate models %></div>
     <table class="table table-striped">
 		<tr>
-			<th><%= t('#') %></th>
+			<th><%= t('Batch#') %></th>
 			<th><%= t('Product Name')%></th>
 			<th><%= t('Drawing#')%></th>
 			<th><%= t('Start Date') %></th>
@@ -24,9 +24,9 @@
 		<% models.each do |r| %>
 		  <tr>
 		  	<% unless has_action_right?('show', params[:controller], r) %>
-		  	  <td><%= prt(r, :id) %></td>
+		  	  <td><%= prt(r, :batch_num) %></td>
 		  	<% else %>
-		  	  <td><%= link_to r.id.to_s, SUBURI + "/authentify/view_handler?index=1&url=#{part_production_path(r)}" %></td>
+		  	  <td><%= link_to r.batch_num, SUBURI + "/authentify/view_handler?index=1&url=#{part_production_path(r)}" %></td>
 		  	<% end %>
 		  	<td><%= prt(r, :part_name) %></td>
 		  	<td><%= prt(r, :drawing_num) %></td>

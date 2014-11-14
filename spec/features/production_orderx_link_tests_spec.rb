@@ -87,11 +87,11 @@ describe "LinkTests" do
       
       visit part_productions_path
       save_and_open_page
-      click_link @b.id.to_s
+      click_link @b.batch_num.to_s
       page.should have_content('Part Production Info')
       #
       visit part_productions_path
-      click_link @b.id.to_s
+      click_link @b.batch_num.to_s
       click_link 'New Log'
       page.should have_content('Log')
       visit part_productions_path()
