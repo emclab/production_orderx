@@ -19,7 +19,8 @@ class CreateProductionOrderxPartProductions < ActiveRecord::Migration
       t.date :actual_finish_date
       t.string :wf_state
       t.string :batch_num
-            
+      t.integer :sales_id
+      
       t.timestamps
     end
     
@@ -31,5 +32,6 @@ class CreateProductionOrderxPartProductions < ActiveRecord::Migration
     add_index :production_orderx_part_productions, :completed
     add_index :production_orderx_part_productions, :void
     add_index :production_orderx_part_productions, :expedite
+    add_index :production_orderx_part_productions, :sales_id
   end
 end
