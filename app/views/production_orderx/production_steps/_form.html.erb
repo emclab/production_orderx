@@ -2,6 +2,7 @@
   <%= render inline: @erb_code %>
   
 <% else %>
+<h4><%=@title %></h4>
 <%= simple_form_for @production_step do |f| %>    
 
   <%= f.input :qty_in, :label => t("Qty In"), :readonly => readonly?(@production_step, 'qty_in') %>

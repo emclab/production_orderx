@@ -2,6 +2,7 @@
   <%= render inline: @erb_code %>
   
 <% else %>
+<h4><%=@title %></h4>
 <%= simple_form_for @part_production do |f| %>    
 
   <%= f.input :part_name, :label => t("Part Name") %> 
@@ -11,6 +12,8 @@
   <%= f.input :qty, :label => t("Qty") %>
   <%= f.input :start_date, :label => t("Start Date"), :as => :string %> 
   <%= f.input :finish_date, :label => t("Finish Date"), :as => :string %> 
+  <%= f.input :aux_resource, :as => :hidden, :input_html => {:value => @aux_resource} if @aux_resource %>
+  <%= render inline: @aux_erb_code, locals: {f: f} if @aux_resource %>
   
   <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
   &nbsp;&nbsp;&nbsp;&nbsp;

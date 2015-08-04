@@ -13,9 +13,9 @@ FactoryGirl.define do
     qty 1
     qty_produced 1
     completed false
-    customer_id 1
+    order_id 1
     expedite false
-    order_manager_id 1
+    coordinator_id 1
     actual_finish_date "2014-11-11"
     wf_state "MyString"
   end

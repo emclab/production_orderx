@@ -3,7 +3,7 @@
   
 <% else %>
 <div class="pagination"><%= will_paginate models %></div>
-
+<h4><%=@title %></h4>
     <table class="table table-striped">
 		<tr>
 			<th><%= t('Create Date') %></th>
@@ -20,7 +20,7 @@
 		  <tr>
 		  	
 		  	<td><%= r.created_at.strftime("%Y/%m/%d::%I%P") %></td>
-			<td><%= prt(r, 'step_status.name') %></td>
+			<td><%= prt(r, 'step_status.name') if r.step_status_id.present? %></td>
 			<td><%= image_tag(params[:controller][/.+\//]+ (RED_GREEN_YELLOW_CLS[r.ontime_indicator] ? '' : RED_GREEN_YELLOW_CLS[r.ontime_indicator]), size: '23x23') if r.ontime_indicator.present? %></td>
 			<td><%= prt(r, :qty_in) %></td>
 			<td><%= prt(r, :qty_out) %></td>
@@ -36,9 +36,9 @@
 	  <tr>
 	    <th>
 	    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	    	<%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'], :id => 'close'  %>
+	    	<%= link_to t('Back'), SUBURI + "/view_handler?index=0", :class => BUTTONS_CLS['action'], :id => 'close'  %>
 	    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	    	<%= link_to t('Next Step'), new_production_step_path(:part_productin_id => @part_production.id, :format => :js), :remote => true, :id => 'new_log_link',
+	    	<%= link_to t('Next Step'), new_production_step_path(:part_production_id => @part_production.id, :format => :js), :remote => true, :id => 'new_log_link',
 	    	                            :class => BUTTONS_CLS['action']  if @part_production && has_action_right?('create', params[:controller], @part_production) %>
 	    </th>
 	  </tr>

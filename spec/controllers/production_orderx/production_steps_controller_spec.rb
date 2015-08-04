@@ -1,10 +1,11 @@
-require 'spec_helper'
+require 'rails_helper'
 
 module ProductionOrderx
-  describe ProductionStepsController do
+  RSpec.describe ProductionStepsController, type: :controller do
+    routes {ProductionOrderx::Engine.routes}
     before(:each) do
-      controller.should_receive(:require_signin)
-      controller.should_receive(:require_employee)
+      expect(controller).to receive(:require_signin)
+      expect(controller).to receive(:require_employee)
       @pagination_config = FactoryGirl.create(:engine_config, :engine_name => nil, :engine_version => nil, :argument_name => 'pagination', :argument_value => 30)
       
     end
@@ -21,7 +22,8 @@ module ProductionOrderx
       @status = FactoryGirl.create(:commonx_misc_definition, :for_which => 'mfg_batch_status', :name => 'started')
       @status1 = FactoryGirl.create(:commonx_misc_definition, :for_which => 'mfg_batch_status', :name => 'started cutting')
       @batch = FactoryGirl.create(:production_orderx_part_production)
-        
+      
+      session[:user_role_ids] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id).user_role_ids  
     end
     
     render_views
@@ -29,24 +31,22 @@ module ProductionOrderx
     describe "GET 'index'" do
       it "returns all step qties" do
         user_access = FactoryGirl.create(:user_access, :action => 'index', :resource =>'production_orderx_production_steps', :role_definition_id => @role.id, :rank => 1,
-        :sql_code => "ProductionOrderx::ProductionStep.scoped.order('id')")
+        :sql_code => "ProductionOrderx::ProductionStep.order('id')")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         o = FactoryGirl.create(:production_orderx_production_step, :part_production_id => @batch.id, :step_status_id => @status.id)
         o1 = FactoryGirl.create(:production_orderx_production_step, :part_production_id => @batch.id, :step_status_id => @status1.id)
-        get 'index', {:use_route => :production_orderx, :part_production_id => @batch.id}
-        assigns(:production_steps).should =~ [o, o1]
+        get 'index', {:part_production_id => @batch.id}
+        expect(assigns(:production_steps)).to match_array([o, o1])
       end
       
       it "should return step qties for the batch" do
         user_access = FactoryGirl.create(:user_access, :action => 'index', :resource =>'production_orderx_production_steps', :role_definition_id => @role.id, :rank => 1,
-        :sql_code => "ProductionOrderx::ProductionStep.scoped.order('id')")
+        :sql_code => "ProductionOrderx::ProductionStep.order('id')")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         o = FactoryGirl.create(:production_orderx_production_step, :part_production_id => @batch.id, :step_status_id => @status.id)
         o1 = FactoryGirl.create(:production_orderx_production_step, :part_production_id => @batch.id, :step_status_id => @status1.id)
-        get 'index', {:use_route => :production_orderx, :part_production_id => @batch.id}
-        assigns(:production_steps).should =~ [o1, o]
+        get 'index', {:part_production_id => @batch.id}
+        expect(assigns(:production_steps)).to match_array( [o1, o])
       end
       
     end
@@ -56,9 +56,8 @@ module ProductionOrderx
         user_access = FactoryGirl.create(:user_access, :action => 'create', :resource =>'production_orderx_production_steps', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
-        get 'new', {:use_route => :production_orderx, :part_production_id => @batch.id}
-        response.should be_success
+        get 'new', {:part_production_id => @batch.id}
+        expect(response).to be_success
       end
     end
   
@@ -67,20 +66,18 @@ module ProductionOrderx
         user_access = FactoryGirl.create(:user_access, :action => 'create', :resource =>'production_orderx_production_steps', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.attributes_for(:production_orderx_production_step, :part_production_id => @batch.id, :step_status_id => @status.id)
-        get 'create', {:use_route => :production_orderx, :production_step => q}
-        response.should redirect_to production_steps_path(part_production_id: @batch.id)
+        get 'create', {:production_step => q}
+        expect(response).to redirect_to production_steps_path(part_production_id: @batch.id)
       end
       
       it "should render new with data error" do
         user_access = FactoryGirl.create(:user_access, :action => 'create', :resource =>'production_orderx_production_steps', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
-        q = FactoryGirl.attributes_for(:production_orderx_production_step, :part_production_id => nil)
-        get 'create', {:use_route => :production_orderx, :part_production_id => @batch.id }
-        response.should render_template('new')
+        q = FactoryGirl.attributes_for(:production_orderx_production_step, :qty_in => nil)
+        get 'create', {production_step: q }
+        expect(response).to render_template('new')
       end
     end
   
@@ -89,10 +86,9 @@ module ProductionOrderx
         user_access = FactoryGirl.create(:user_access, :action => 'update', :resource =>'production_orderx_production_steps', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:production_orderx_production_step, :part_production_id => @batch.id, :step_status_id => @status.id)
-        get 'edit', {:use_route => :production_orderx, :id => q.id}
-        response.should be_success
+        get 'edit', {:id => q.id}
+        expect(response).to be_success
       end
     end
   
@@ -101,20 +97,18 @@ module ProductionOrderx
         user_access = FactoryGirl.create(:user_access, :action => 'update', :resource =>'production_orderx_production_steps', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:production_orderx_production_step, :part_production_id => @batch.id, :step_status_id => @status.id)
-        get 'update', {:use_route => :production_orderx, :id => q.id, :production_step => {:brief_note => 'steel 201'}}
-        response.should redirect_to production_steps_path(part_production_id: @batch.id)
+        get 'update', {:id => q.id, :production_step => {:brief_note => 'steel 201'}}
+        expect(response).to redirect_to production_steps_path(part_production_id: @batch.id)
       end
       
       it "should render edit with data error" do
         user_access = FactoryGirl.create(:user_access, :action => 'update', :resource =>'production_orderx_production_steps', :role_definition_id => @role.id, :rank => 1,
         :sql_code => "")
         session[:user_id] = @u.id
-        session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         q = FactoryGirl.create(:production_orderx_production_step, :part_production_id => @batch.id, :step_status_id => @status.id)
-        get 'update', {:use_route => :production_orderx, :id => q.id, :production_step => {:qty_in => nil}}
-        response.should render_template('edit')
+        get 'update', {:id => q.id, :production_step => {:qty_in => nil}}
+        expect(response).to render_template('edit')
       end
     end
   end
