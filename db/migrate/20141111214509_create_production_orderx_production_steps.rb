@@ -8,6 +8,8 @@ class CreateProductionOrderxProductionSteps < ActiveRecord::Migration
       t.text :brief_note
       t.integer :last_updated_by_id
       t.string :ontime_indicator
+      t.datetime :start_time
+      t.datetime :finish_time
 
       t.timestamps
     end

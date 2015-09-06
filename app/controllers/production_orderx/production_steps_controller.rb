@@ -57,11 +57,11 @@ module ProductionOrderx
     
     private 
     def new_params
-      params.require(:production_step).permit(:brief_note, :ontime_indicator, :part_production_id, :qty_in, :qty_out, :step_status_id)
+      params.require(:production_step).permit(:brief_note, :ontime_indicator, :part_production_id, :qty_in, :qty_out, :step_status_id, :start_time, :finish_time)
     end
     
     def edit_params
-      params.require(:production_step).permit(:brief_note, :ontime_indicator, :qty_in, :qty_out, :step_status_id)
+      params.require(:production_step).permit(:brief_note, :ontime_indicator, :qty_in, :qty_out, :step_status_id, :start_time, :finish_time)
     end
   end
 end
