@@ -93,6 +93,7 @@ module ProductionOrderx
     def load_record
       @order = ProductionOrderx.order_class.find_by_id(params[:order_id].to_i) if params[:order_id].present?
       @order = ProductionOrderx.order_class.find_by_id(ProductionOrderx::PartProduction.find_by_id(params[:id].to_i).order_id) if params[:id].present?
+      @order = ProductionOrderx.order_class.find_by_id(ProductionOrderx::PartProduction.find_by_id(params[:part_production][:order_id].to_i).order_id) if params[:part_production][:order_id].present?
       @part = ProductionOrderx.part_class.find_by_id(params[:part_id].to_i) if params[:part_id].present?
       @part = ProductionOrderx.part_class.find_by_id(ProductionOrderx::PartProduction.find_by_id(params[:id].to_i).part_id) if params[:id].present?
       @aux_resource = params[:aux_resource].strip if params[:aux_resource]  #cob_orderx/cob_orders
