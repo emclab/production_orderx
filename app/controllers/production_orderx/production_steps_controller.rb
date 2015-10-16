@@ -53,7 +53,7 @@ module ProductionOrderx
     def load_record
       @part_production = ProductionOrderx::PartProduction.find_by_id(params[:part_production_id]) if params[:part_production_id].present?
       @part_production = ProductionOrderx::PartProduction.find_by_id(ProductionOrderx::ProductionStep.find_by_id(params[:id]).part_production_id) if params[:id].present?
-      @part_production = ProductionOrderx::PartProduction.find_by_id(ProductionOrderx::ProductionStep.find_by_id(params[:production_step][:part_production_id]).part_production_id) if params[:production_step] && params[:production_step][:part_production_id].present?
+      @part_production = ProductionOrderx::PartProduction.find_by_id(params[:production_step][:part_production_id].to_i) if params[:production_step] && params[:production_step][:part_production_id].present?
     end
     
     private 
