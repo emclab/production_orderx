@@ -15,7 +15,7 @@
   <%= f.input :aux_resource, :as => :hidden, :input_html => {:value => @aux_resource} if @aux_resource %>
   <%= render inline: @aux_erb_code, locals: {f: f} if @aux_resource %>
   
-  <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
+  <%= link_to t('Back'), SUBURI + "/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
   &nbsp;&nbsp;&nbsp;&nbsp;
   <%= f.button :submit, I18n.t('Save'), :class => BUTTONS_CLS['action'] %>  
 <% end %>

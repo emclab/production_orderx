@@ -1,20 +1,8 @@
 module ProductionOrderx
   class PartProduction < ActiveRecord::Base
-    attr_accessor :customer_name, :last_updated_by_name, :step_status_name, :order_manager_name, :sales_name, :sales_name, :coordinator_name
-=begin
-    attr_accessible :actual_finish_date, :completed, :customer_id, :drawing_num, :expedite, :finish_date, :last_updated_by_id, :order_manager_id, :part_name, 
-                    :part_num, :qty, :qty_produced, :requirement, :start_date, :step_status_id, :void, :wf_state, :unit, :batch_num, :sales_id,
-                    :as => :role_new
-    attr_accessible :actual_finish_date, :completed, :customer_id, :drawing_num, :expedite, :finish_date, :last_updated_by_id, :order_manager_id, :part_name, 
-                    :part_num, :qty, :qty_produced, :requirement, :start_date, :step_status_id, :void, :wf_state, :unit, :batch_num, :sales_id, :sales_name,
-                    :as => :role_update
-                                    
-    attr_accessor :customer_id_s, :start_date_s, :end_date_s, :time_frame_s, :part_name_s, :drawing_num_s, :part_num_s, :expedite_s, :completed_s, :o_start_date_s, 
-                  :o_finish_date_s, :batch_num_s, :sales_id_s
-    attr_accessible :customer_id_s, :start_date_s, :end_date_s, :time_frame_s, :part_name_s, :drawing_num_s, :part_num_s, :expedite_s, :completed_s, :o_start_date_s, 
-                    :o_finish_date_s, :batch_num_s, :sales_id_s,
-                    :as => :role_search_stats
-=end              
+    attr_accessor :customer_name, :last_updated_by_name, :step_status_name, :order_manager_name, :sales_name, :field_changed, :coordinator_name, :order_shipping_date,
+                  :item_order_qty, :item_qty_in_prodution
+       
     model_name = Rails.env.test? ? 'cob_orderx/cob_infos' : Authentify::AuthentifyUtility.find_config_const('aux_resource', 'production_orderx')  #cob_orderx/orders
     model_name.split(',').each do |a|
       has_one a.sub(/.+\//,'').singularize.to_sym, class_name: a.camelize.singularize.to_s, dependent: :destroy, autosave: true

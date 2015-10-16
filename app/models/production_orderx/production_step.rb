@@ -1,13 +1,8 @@
 module ProductionOrderx
   class ProductionStep < ActiveRecord::Base
-    attr_accessor :step_status_name
+    attr_accessor :step_status_name, :field_changed
     
-=begin
-    attr_accessible :brief_note, :ontime_indicator, :part_production_id, :qty_in, :qty_out, :step_status_id,
-                    :as => :role_new
-    attr_accessible :brief_note, :ontime_indicator, :qty_in, :qty_out, :step_status_id,
-                    :as => :role_update
-=end
+
     belongs_to :last_updated_by, :class_name => 'Authentify::User'
     belongs_to :part_production, :class_name => ProductionOrderx.part_production_class.to_s 
     belongs_to :step_status, :class_name => 'Commonx::MiscDefinition'  

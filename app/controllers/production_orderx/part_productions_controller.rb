@@ -32,7 +32,7 @@ module ProductionOrderx
         if params[:part_production][aux_model.to_sym].present?   #fields presented in views
           aux_obj = @part_production.send("build_#{aux_model}")
           params[:part_production][aux_model.to_sym].each do |k, v|
-            aux_obj[k.to_sym] = v if v.present?
+            aux_obj[k.to_sym] = v if v.present? && aux_obj.has_attribute?(k.to_sym)
           end
         end
       end
@@ -65,7 +65,7 @@ module ProductionOrderx
         if params[:part_production][@aux_model.to_sym].present? #aux fields presented in views
           aux_obj = @order.send(@aux_model)
           params[:part_production][@aux_model.to_sym].each do |k, v|
-            aux_obj[k.to_sym] = v if v.present?
+            aux_obj[k.to_sym] = v if v.present? && aux_obj.has_attribute?(k.to_sym)
           end
         end
       end
@@ -96,7 +96,9 @@ module ProductionOrderx
       @part = ProductionOrderx.part_class.find_by_id(params[:part_id].to_i) if params[:part_id].present?
       @part = ProductionOrderx.part_class.find_by_id(ProductionOrderx::PartProduction.find_by_id(params[:id].to_i).part_id) if params[:id].present?
       @aux_resource = params[:aux_resource].strip if params[:aux_resource]  #cob_orderx/cob_orders
-      @aux_resource = ProductionOrderx::PartProduction.find_by_id(params[:id]).aux_resource if params[:id].present?    
+      @aux_resource = ProductionOrderx::PartProduction.find_by_id(params[:id]).aux_resource if params[:id].present? 
+      @aux_resource = params[:part_production][:aux_resource] if params[:part_productioon] && params[:part_production][:aux_resource].present?
+      @aux_resource = session[:aux_resource].strip if session[:aux_resource]   
       @aux_engine = @aux_resource.sub(/\/.+/, '') if @aux_resource  
       @aux_model = @aux_resource.sub(/.+\//,'').singularize.to_s if @aux_resource  #cob_info
     end

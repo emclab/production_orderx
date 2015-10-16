@@ -12,3 +12,11 @@ $(function() {
    $("#part_production_o_finish_date_s").datepicker({dateFormat: 'yy-mm-dd'});
    $("#part_production_o_start_date_s").datepicker({dateFormat: 'yy-mm-dd'});
 });
+
+$(function() {
+	$('#part_production_part_num').change(function() { 
+	  $('#part_production_field_changed').val('part_num');
+      $.get(window.location, $('form').serialize(), null, "script");
+  	  return false;
+	});
+});
