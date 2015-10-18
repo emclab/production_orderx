@@ -1,3 +1,3 @@
 module ProductionOrderx
-  VERSION = "04"
+  VERSION = "05"
 end

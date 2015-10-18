@@ -4,6 +4,7 @@ class CreateProductionOrderxPartProductions < ActiveRecord::Migration
       t.integer :part_id  
       t.integer :order_id  #belongs to a sales order
       t.string :part_name
+      t.string :spec
       t.string :part_num
       t.string :drawing_num
       t.text :requirement
@@ -30,6 +31,7 @@ class CreateProductionOrderxPartProductions < ActiveRecord::Migration
     add_index :production_orderx_part_productions, :part_name
     add_index :production_orderx_part_productions, :drawing_num
     add_index :production_orderx_part_productions, :part_num
+    add_index :production_orderx_part_productions, :spec
     add_index :production_orderx_part_productions, :batch_num
     add_index :production_orderx_part_productions, :coordinator_id
     add_index :production_orderx_part_productions, :completed

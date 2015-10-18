@@ -4,7 +4,8 @@
 <% else %>
 <h4><%=@title %></h4>
 <%= simple_form_for @part_production do |f| %>    
-
+   
+  <%#= f.input :order_id, :label => t('Order#'), readonly: true, :input_html => {:value => @order.id} %>
   <%= f.input :part_name, :label => t("Part Name") %> 
   <%= f.input :drawing_num, :label => t("Drawing#") %> 
   <%= f.input :batch_num, :label => t("Batch#") %> 
