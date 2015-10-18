@@ -1,7 +1,7 @@
 module ProductionOrderx
   class PartProduction < ActiveRecord::Base
     attr_accessor :customer_name, :last_updated_by_name, :step_status_name, :order_manager_name, :sales_name, :field_changed, :coordinator_name, :order_shipping_date,
-                  :item_order_qty, :item_qty_in_prodution
+                  :item_order_qty, :item_qty_in_production
        
     model_name = Rails.env.test? ? 'cob_orderx/cob_infos' : Authentify::AuthentifyUtility.find_config_const('aux_resource', 'production_orderx')  #cob_orderx/orders
     model_name.split(',').each do |a|
