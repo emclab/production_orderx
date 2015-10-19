@@ -107,12 +107,12 @@ module ProductionOrderx
     private
     def new_params
       params.require(:part_production).permit(:actual_finish_date, :completed, :customer_id, :drawing_num, :expedite, :finish_date, :last_updated_by_id, :order_manager_id, :part_name, 
-                    :part_num, :qty, :qty_produced, :requirement, :start_date, :step_status_id, :void, :wf_state, :unit, :batch_num, :sales_id, :spec)
+                    :part_num, :qty, :qty_produced, :requirement, :start_date, :step_status_id, :void, :wf_state, :unit, :batch_num, :sales_id, :spec, :order_id, :part_id)
     end
     
     def edit_params
       params.require(:part_production).permit(:actual_finish_date, :completed, :customer_id, :drawing_num, :expedite, :finish_date, :last_updated_by_id, :order_manager_id, :part_name, 
-                    :part_num, :qty, :qty_produced, :requirement, :start_date, :step_status_id, :void, :wf_state, :unit, :batch_num, :sales_id, :spec)
+                    :part_num, :qty, :qty_produced, :requirement, :start_date, :step_status_id, :void, :wf_state, :unit, :batch_num, :sales_id, :spec, :order_id, :part_id)
     end
   end
 end
