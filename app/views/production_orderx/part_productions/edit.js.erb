@@ -2,7 +2,7 @@
   <%= render inline: ERB.new(@js_erb_code).result(binding) %>
   
 <% else %>
-<% if  @order.aux_resource.nil? %>
+<% if  @order.aux_resource.nil? || @order.aux_resource == "production_orderx/part_productions" %>
   <% if params[:part_production][:field_changed] == 'part_num' && params[:part_production][:part_num].present?  %>
     <% order_item = @order.order_items.where('item_num = ?', params[:part_production][:part_num]).first %>
     $('#part_production_part_name').val("<%=order_item.name%>");
