@@ -2,11 +2,11 @@
   <%= render inline: ERB.new(@js_erb_code).result(binding) %>
   
 <% else %>
-<% if  @order.aux_resource.nil? || @order.aux_resource == "production_orderx/part_productions" %>
+<% if  @order.aux_resource.nil? || @order.aux_resource == "multi_item_orderx/orders" %>
   <% if params[:part_production][:field_changed] == 'part_num' && params[:part_production][:part_num].present?  %>
     <% order_item = @order.order_items.where('item_num = ?', params[:part_production][:part_num]).first %>
     $('#part_production_part_name').val("<%=order_item.name%>");
-    $('#part_production_spec').val("<%=order_item.spec%>");
+    $('#part_production_spec').val("<%=order_item.item_spec%>");
     $('#part_production_part_id').val("<%=order_item.base_item_id %>");
     $('#part_production_item_qty_in_production').val("<%=ProductionOrderx::PartProduction.where(part_num: params[:part_production][:part_num]).sum('qty')%>");
     $('#part_production_item_order_qty').val("<%=order_item.qty%>");
@@ -19,23 +19,7 @@
     $('#part_production_item_order_qty').val("");
     $('#part_productin_field_changed').val('');
   <% end %>
-<% else %>
-  <% if params[:part_production][:field_changed] == 'part_num' && params[:part_production][:part_num].present?  %>
-    <% order_item = @order.order_items.where('item_num = ?', params[:part_production][:part_num]).first %>
-    $('#part_production_part_name').val("<%=order_item.name%>");
-    $('#part_production_spec').val("<%=order_item.spec%>");
-    $('#part_production_part_id').val("<%=order_item.base_item_id %>");
-    $('#part_production_item_qty_in_production').val("<%=ProductionOrderx::PartProduction.where(part_num: params[:part_production][:part_num]).sum('qty')%>");
-    $('#part_production_item_order_qty').val("<%=MultiItemOrderx.order_aux_class.where(order_id: @order.id).qty %>");
-    $('#part_production_field_changed').val('');
-  <% elsif params[:part_production][:field_changed] == 'part_num' %>
-    $('#part_production_part_name').val("");
-    $('#part_production_spec').val("");
-    $('#part_production_part_id').val("");
-    $('#part_production_item_qty_in_production').val("");
-    $('#part_production_item_order_qty').val("");
-    $('#part_productin_field_changed').val('');
-  <% end %>
+<% elsif @order.aux_resource == "cob_orderx/cob_infos" %>
 <% end %>
 
 

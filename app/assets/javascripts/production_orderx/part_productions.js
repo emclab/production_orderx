@@ -7,10 +7,10 @@ $(function() {
 });
 
 $(function() {
-   $("#part_production_start_date_s").datepicker({dateFormat: 'yy-mm-dd'});
-   $("#part_production_end_date_s").datepicker({dateFormat: 'yy-mm-dd'});
-   $("#part_production_o_finish_date_s").datepicker({dateFormat: 'yy-mm-dd'});
-   $("#part_production_o_start_date_s").datepicker({dateFormat: 'yy-mm-dd'});
+   $("#start_date_s").datepicker({dateFormat: 'yy-mm-dd'});
+   $("#end_date_s").datepicker({dateFormat: 'yy-mm-dd'});
+   $("#o_finish_date_s").datepicker({dateFormat: 'yy-mm-dd'});
+   $("#o_start_date_s").datepicker({dateFormat: 'yy-mm-dd'});
 });
 
 $(function() {
