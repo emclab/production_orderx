@@ -1,0 +1,1 @@
+Rails.application.config.assets.precompile += %w( production_orderx/Button-Blank-Green-icon.png production_orderx/Button-Blank-Red-icon.png production_orderx/Button-Blank-Yellow-icon.png)

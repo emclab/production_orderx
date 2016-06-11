@@ -7,6 +7,7 @@ module ProductionOrderx
       expect(controller).to receive(:require_signin)
       expect(controller).to receive(:require_employee)
       @pagination_config = FactoryGirl.create(:engine_config, :engine_name => nil, :engine_version => nil, :argument_name => 'pagination', :argument_value => 30)
+      config_entry = FactoryGirl.create(:engine_config, :engine_name => 'rails_app', :engine_version => nil, :argument_name => 'SESSION_TIMEOUT_MINUTES', :argument_value => 30)
       
     end
     
@@ -23,7 +24,8 @@ module ProductionOrderx
       @status1 = FactoryGirl.create(:commonx_misc_definition, :for_which => 'mfg_batch_status', :name => 'started cutting')
       @batch = FactoryGirl.create(:production_orderx_part_production)
       
-      session[:user_role_ids] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id).user_role_ids  
+      session[:user_role_ids] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id).user_role_ids 
+      session[:fort_token] = @u.fort_token 
     end
     
     render_views

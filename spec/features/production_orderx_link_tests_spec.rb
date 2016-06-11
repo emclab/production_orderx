@@ -25,6 +25,7 @@ RSpec.describe "LinkTests", type: :request do
          'form-span#'         => '4'
         }
     before(:each) do
+      config_entry = FactoryGirl.create(:engine_config, :engine_name => 'rails_app', :engine_version => nil, :argument_name => 'SESSION_TIMEOUT_MINUTES', :argument_value => 30)
       @pagination_config = FactoryGirl.create(:engine_config, :engine_name => nil, :engine_version => nil, :argument_name => 'pagination', :argument_value => 30)
       z = FactoryGirl.create(:zone, :zone_name => 'hq')
       type = FactoryGirl.create(:group_type, :name => 'employee')
@@ -32,7 +33,7 @@ RSpec.describe "LinkTests", type: :request do
       @role = FactoryGirl.create(:role_definition)
       ur = FactoryGirl.create(:user_role, :role_definition_id => @role.id)
       ul = FactoryGirl.build(:user_level, :sys_user_group_id => ug.id)
-      @u = FactoryGirl.create(:user, :user_levels => [ul], :user_roles => [ur], :login => 'thistest', :password => 'password', :password_confirmation => 'password')
+      @u = FactoryGirl.create(:user, :user_levels => [ul], :user_roles => [ur], :login => 'thistest', :password => 'password1', :password_confirmation => 'password1')
       
       ua1 = FactoryGirl.create(:user_access, :action => 'index', :resource => 'production_orderx_part_productions', :role_definition_id => @role.id, :rank => 1,
            :sql_code => "ProductionOrderx::PartProduction.where(:void => false).order('created_at DESC')")
@@ -72,6 +73,10 @@ RSpec.describe "LinkTests", type: :request do
     it "works! (now write some real specs)" do
       # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
       visit production_orderx.part_productions_path
+      expect(Authentify::SysLog.all.count).to eq(1)
+      expect(Authentify::SysLog.all.first.resource).to eq('production_orderx/part_productions')
+      expect(Authentify::SysLog.all.first.user_id).to eq(@u.id)
+     
       #save_and_open_page
       expect(page).to have_content('Part Productions')
       click_link "Edit"
@@ -126,6 +131,9 @@ RSpec.describe "LinkTests", type: :request do
     it "works for production step" do
       visit production_orderx.production_steps_path(part_production_id: @b.id)
       expect(page).to have_content('Production Steps')
+      expect(Authentify::SysLog.all.count).to eq(1)
+      expect(Authentify::SysLog.all.first.resource).to eq('production_orderx/production_steps')
+      expect(Authentify::SysLog.all.first.user_id).to eq(@u.id)
       #save_and_open_page
       expect(page).to have_content('Next Step')
       click_link 'Next Step'

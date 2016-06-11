@@ -12,6 +12,7 @@ category_id 1
 sub_category_id 1
 base_item_id 1
 item_note "MyText"
+fort_token '123456789'
   end
 
 end

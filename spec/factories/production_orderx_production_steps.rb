@@ -9,5 +9,6 @@ FactoryGirl.define do
     brief_note "MyText"
     #last_updated_by_id 1
     ontime_indicator "green"
+    fort_token '123456789'
   end
 end

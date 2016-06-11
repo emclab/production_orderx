@@ -1,4 +1,4 @@
-<% if @view_in_config && @erb_code %>
+<% if @erb_code %>
   <%= render inline: ERB.new(@erb_code).result(binding) %>
   
 <% else %>
@@ -27,7 +27,7 @@
 		  	<% unless has_action_right?('show', params[:controller], r) %>
 		  	  <td><%= prt(r, :batch_num) %></td>
 		  	<% else %>
-		  	  <td><%= link_to r.batch_num, SUBURI + "/authentify/view_handler?index=1&url=#{part_production_path(r)}" %></td>
+		  	  <td><%= link_to r.batch_num, SUBURI + "/view_handler?index=1&url=#{part_production_path(r)}" %></td>
 		  	<% end %>
 		  	<td><%= prt(r, :part_name) %></td>
 		  	<td><%= prt(r, :drawing_num) %></td>
@@ -40,8 +40,8 @@
             <td><%= r.production_steps.last.qty_in if r.production_steps.present? %></td>
 			<td><%= r.completed ? t('Yes') : t('No') %></td>
 			<td><%= prt(r, 'last_updated_by.name') if r.last_updated_by_id.present? %></td>    
-			<td><%= link_to t('Production Steps'), SUBURI + "/authentify/view_handler?index=1&url=#{production_steps_path(:part_production_id => r.id)}", :class => BUTTONS_CLS['action']  %></td>
-		    <td><%= link_to t('Edit'), SUBURI + "/authentify/view_handler?index=1&url=#{edit_part_production_path(r)}", :class => BUTTONS_CLS['action']  if has_action_right?('update', params[:controller], r) %></td>
+			<td><%= link_to t('Production Steps'), SUBURI + "/view_handler?index=1&url=#{production_steps_path(:part_production_id => r.id)}", :class => BUTTONS_CLS['action']  %></td>
+		    <td><%= link_to t('Edit'), SUBURI + "/view_handler?index=1&url=#{edit_part_production_path(r)}", :class => BUTTONS_CLS['action']  if has_action_right?('update', params[:controller], r) %></td>
 			
 		  </tr>
 		<% end %>

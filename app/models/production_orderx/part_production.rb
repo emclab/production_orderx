@@ -3,7 +3,7 @@ module ProductionOrderx
     attr_accessor :customer_name, :last_updated_by_name, :step_status_name, :order_manager_name, :sales_name, :field_changed, :coordinator_name, :order_shipping_date,
                   :item_order_qty, :item_qty_in_production, :part_info
        
-    model_name = Rails.env.test? ? 'cob_orderx/cob_infos' : Authentify::AuthentifyUtility.find_config_const('aux_resource', 'production_orderx')  #cob_orderx/orders
+    model_name = Rails.env.test? ? 'cob_orderx/cob_infos' : Authentify::AuthentifyUtility.find_config_const('aux_resource', Thread.current['fort_token'], 'production_orderx')  #cob_orderx/orders
     model_name.split(',').each do |a|
       has_one a.sub(/.+\//,'').singularize.to_sym, class_name: a.camelize.singularize.to_s, dependent: :destroy, autosave: true
     end if model_name.present?
@@ -14,7 +14,7 @@ module ProductionOrderx
     belongs_to :part, :class_name => ProductionOrderx.part_class.to_s
     has_many :production_steps, :class_name => ProductionOrderx.production_step_class.to_s
     
-    validates :part_name, :qty, :start_date, :finish_date, :presence => true 
+    validates :part_name, :qty, :start_date, :finish_date, :fort_token, :presence => true 
     validates :qty, :numericality => {:greater_than => 0}
     validates :coordinator_id, :numericality => {:greater_than => 0}, :if => 'coordinator_id.present?'
     validates :order_id, :numericality => {:greater_than => 0}, :if => 'order_id.present?'
@@ -23,8 +23,10 @@ module ProductionOrderx
     
     validate :dynamic_validate 
     
+    default_scope {where(fort_token: Thread.current[:fort_token])}
+    
     def dynamic_validate
-      wf = Authentify::AuthentifyUtility.find_config_const('dynamic_validate_part_production', 'production_orderx')
+      wf = Authentify::AuthentifyUtility.find_config_const('dynamic_validate_part_production', self.fort_token, 'production_orderx')
       eval(wf) if wf.present?
     end
   end

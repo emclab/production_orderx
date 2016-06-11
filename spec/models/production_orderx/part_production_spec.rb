@@ -12,6 +12,11 @@ module ProductionOrderx
       expect(c).not_to be_valid
     end
     
+    it "should reject nil token" do
+      c = FactoryGirl.build(:production_orderx_part_production, :fort_token => nil)
+      expect(c).not_to be_valid
+    end
+    
     it "should reject 0 qty" do
       c = FactoryGirl.build(:production_orderx_part_production, :qty => 0)
       expect(c).not_to be_valid

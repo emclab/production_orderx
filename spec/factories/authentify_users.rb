@@ -5,13 +5,14 @@ FactoryGirl.define do
     name                  "Test User"
     login                 'testuser'
     email                 "test@test.com"
-    password              "password"
+    password              "password1"
     password_confirmation {password}
     status                "active"
     last_updated_by_id    1
     auth_token            "123"
     password_reset_token  nil
     password_reset_sent_at nil
+    fort_token '123456789'
 
     #user_levels
     #after(:build) do |user|

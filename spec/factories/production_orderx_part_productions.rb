@@ -18,5 +18,6 @@ FactoryGirl.define do
     coordinator_id 1
     actual_finish_date "2014-11-11"
     wf_state "MyString"
+    fort_token '123456789'
   end
 end

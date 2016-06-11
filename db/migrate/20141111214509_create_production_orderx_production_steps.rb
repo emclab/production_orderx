@@ -10,6 +10,7 @@ class CreateProductionOrderxProductionSteps < ActiveRecord::Migration
       t.string :ontime_indicator
       t.datetime :start_time
       t.datetime :finish_time
+      t.string :fort_token
 
       t.timestamps
     end
@@ -17,5 +18,6 @@ class CreateProductionOrderxProductionSteps < ActiveRecord::Migration
     add_index :production_orderx_production_steps, :step_status_id
     add_index :production_orderx_production_steps, :part_production_id
     add_index :production_orderx_production_steps, :ontime_indicator
+    add_index :production_orderx_production_steps, :fort_token
   end
 end

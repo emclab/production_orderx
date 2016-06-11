@@ -26,6 +26,7 @@ FactoryGirl.define do
     completed false
     order_requirement 'requirement goes here'
     entered_by_id 1
+    fort_token '123456789'
   end
 
 end

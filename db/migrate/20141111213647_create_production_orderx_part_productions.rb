@@ -23,14 +23,15 @@ class CreateProductionOrderxPartProductions < ActiveRecord::Migration
       t.string :batch_num
       t.text :brief_note
       t.string :aux_resource   #'ic_productionx/ic_infos'.  pointing to a table with more production order detail
-     
-      
+      t.string :fort_token
+           
       t.timestamps
     end
     
     add_index :production_orderx_part_productions, :part_name
     add_index :production_orderx_part_productions, :drawing_num
     add_index :production_orderx_part_productions, :part_num
+    add_index :production_orderx_part_productions, :fort_token
     add_index :production_orderx_part_productions, :spec
     add_index :production_orderx_part_productions, :batch_num
     add_index :production_orderx_part_productions, :coordinator_id
