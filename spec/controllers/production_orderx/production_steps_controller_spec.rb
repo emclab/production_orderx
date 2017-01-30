@@ -113,5 +113,17 @@ module ProductionOrderx
         expect(response).to render_template('edit')
       end
     end
+    
+    describe "GET 'destroy'" do
+      it "returns http success" do
+        user_access = FactoryGirl.create(:user_access, :action => 'destroy', :resource =>'production_orderx_production_steps', :role_definition_id => @role.id, :rank => 1,
+        :sql_code => "record.last_updated_by_id == session[:user_id]")
+        session[:user_id] = @u.id
+        q = FactoryGirl.create(:production_orderx_production_step, :last_updated_by_id => @u.id)
+        get 'destroy', {:id => q.id}
+        expect(response).to redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=Successfully Deleted!")
+      end
+    end
+    
   end
 end

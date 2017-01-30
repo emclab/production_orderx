@@ -56,12 +56,21 @@ RSpec.describe "LinkTests", type: :request do
            :sql_code => "")
       ua1 = FactoryGirl.create(:user_access, :action => 'update', :resource => 'production_orderx_production_steps', :role_definition_id => @role.id, :rank => 1,
            :sql_code => "")
-      
+      #op
+      ua1 = FactoryGirl.create(:user_access, :action => 'index', :resource => 'production_orderx_operators', :role_definition_id => @role.id, :rank => 1,
+           :sql_code => "ProductionOrderx::Operator.order('id')")
+      ua1 = FactoryGirl.create(:user_access, :action => 'create', :resource => 'production_orderx_operators', :role_definition_id => @role.id, :rank => 1,
+           :sql_code => "", :masked_attrs => '-hourly_cost')
+      ua1 = FactoryGirl.create(:user_access, :action => 'update', :resource => 'production_orderx_operators', :role_definition_id => @role.id, :rank => 1,
+           :sql_code => "")
+      ua1 = FactoryGirl.create(:user_access, :action => 'show', :resource => 'production_orderx_operators', :role_definition_id => @role.id, :rank => 1,
+           :sql_code => "")
       
       @status = FactoryGirl.create(:commonx_misc_definition, :for_which => 'mfg_status', :name => 'started')
       @b = FactoryGirl.create(:production_orderx_part_production,  :qty_produced => 500)
       log = FactoryGirl.create(:commonx_log, :resource_name => 'production_orderx_production_steps', :resource_id => @b.id)
       @step = FactoryGirl.create(:production_orderx_production_step, :part_production_id => @b.id, :step_status_id => @status.id)
+      @op = FactoryGirl.create(:production_orderx_operator, :production_step_id => @step.id, :name => 'op1')
         
       visit '/'
       #save_and_open_page
@@ -157,6 +166,33 @@ RSpec.describe "LinkTests", type: :request do
       #fill_in 'production_step_brief_note', with: 'a new stuff'
       #visit production_orderx.production_steps_path(part_production_id: @b.id)
       #expect(page).should have_content('a new stuff')
+    end
+    
+    it "works for operators" do
+      FactoryGirl.create(:commonx_misc_definition, :for_which => 'hr_name_list', :name => 'op1')
+      
+      visit production_orderx.operators_path(production_step_id: @step.id)
+      expect(page).to have_content('Operators')
+      #show
+      click_link @op.name
+      #edit
+      visit production_orderx.operators_path(production_step_id: @step.id)
+      click_link 'Edit'
+      #save_and_open_page
+      fill_in 'operator_hours_spent', with: 101
+      select 'op1', from: 'operator_name'
+      click_button 'Save'
+      visit production_orderx.operators_path(production_step_id: @step.id)
+      #save_and_open_page
+      expect(page).to have_content('101')
+      #
+      click_link('New Operator')
+      expect(page).not_to have_content('Hourly Cost($)')
+      select('op1', from: 'operator_name')
+      fill_in 'operator_hours_spent', with: 10
+      click_button 'Save'    
+      #
+      
     end
   end
 end

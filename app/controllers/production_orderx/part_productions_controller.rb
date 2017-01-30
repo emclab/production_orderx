@@ -92,6 +92,13 @@ module ProductionOrderx
       @aux_erb_code = find_config_const(@aux_model + '_show_view', session[:fort_token], @aux_engine) if @aux_resource
     end
     
+    def destroy
+      ProductionOrderx::Operator.where('production_step_id IN (?)', ProductionStep.where('part_production_id = ?', params[:id].to_i).pluck('id') ).destroy_all
+      ProductionOrderx::PartProduction.find(params[:id].to_i).production_steps.destroy_all
+      ProductionOrderx::PartProduction.delete(params[:id].to_i)
+      redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=Successfully Deleted!")
+    end
+    
     protected
     def load_record
       @order = ProductionOrderx.order_class.find_by_id(params[:order_id].to_i) if params[:order_id].present?

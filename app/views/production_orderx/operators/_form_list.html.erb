@@ -1,0 +1,49 @@
+<% if @erb_code %>
+  <%= render inline: ERB.new(@erb_code).result(binding) %>
+  
+<% else %>
+
+<div class="pagination"><%= will_paginate models %></div>
+<div class="container-fluid">
+        <div class="pull-left">
+            <h2><%=@title if @title%></h2>
+        </div>
+      <table class="table table-hover">
+        <thead>
+		 <tr>
+			<th><%= t('Name') %></th>
+			<th><%= t('Hours Spent(H)') %></th>
+			<th><%= t('Hourly Rate($)') %></th>	
+			<th><%= t('Brief Note') %></th>
+			<th></th>
+			
+		</tr>
+	   </thead>
+      <tbody>
+		<% models.each do |r| %>
+		  <tr>
+		  	<% unless has_action_right?('show', params[:controller], r) %>
+		  	  <td><%= prt(r, :name) %></td>
+		  	<% else %>
+		  	  <td><%= link_to r.name.to_s, SUBURI + "/view_handler?index=1&url=#{operator_path(r)}" %></td>
+		  	<% end %>
+		  	<td><%= number_with_precision(prt(r, :hours_spent), :precision => 2, :separator => '.') %></td>
+			<td><%= number_with_precision(prt(r, :hourly_rate), :precision => 2, :separator => '.') unless noshow?(r, 'hourly_rate') %></td>
+			<td><%= r.brief_note %></td>
+			<%  if has_action_right?('update', 'production_orderx/operators') %>
+              <td><%= link_to t('Edit'), SUBURI + "/view_handler?index=1&url=#{CGI.escape(edit_operator_path(r))}", :class => BUTTONS_CLS['action'] %></td>
+            <% end %>
+            
+		  </tr>
+		<% end %>
+	   </tbody>
+	</table>
+	
+	<div class="btn-toolbar">
+	    	<%= link_to t('Back'), SUBURI + "/view_handler?index=0", :class => BUTTONS_CLS['action']  %>
+	    	<%= link_to t('New Operator'), SUBURI + "/view_handler?index=1&url=#{CGI::escape new_operator_path(production_step_id: @production_step.id) }", :class => BUTTONS_CLS['action']  if @production_step && has_action_right?('create', params[:controller]) %>
+	</div>
+
+</div>
+
+<% end %>	

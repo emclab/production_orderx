@@ -51,6 +51,12 @@ module ProductionOrderx
       end
     end
     
+    def destroy
+      ProductionOrderx::Operator.where('production_step_id = ?', ProductionOrderx::ProductionStep.find_by_id(params[:id].to_i).id).destroy_all
+      ProductionOrderx::ProductionStep.delete(params[:id].to_i)
+      redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=Successfully Deleted!")
+    end
+    
     protected
     def load_record
       @part_production = ProductionOrderx::PartProduction.find_by_id(params[:part_production_id]) if params[:part_production_id].present?

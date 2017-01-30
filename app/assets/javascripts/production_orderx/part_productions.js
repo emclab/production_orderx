@@ -15,8 +15,7 @@ $(function() {
 
 $(function() {
 	$('#part_production_part_num').change(function() { 
-	  $('#part_production_field_changed').val('part_num');
-      $.get(window.location, $('form').serialize(), null, "script");
+      $.get(window.location, {field_changed: 'part_num', part_num: $('#part_production_part_num').val()}, null, "script");
   	  return false;
 	});
 });

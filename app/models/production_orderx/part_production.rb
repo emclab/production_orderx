@@ -12,7 +12,7 @@ module ProductionOrderx
     belongs_to :coordinator, :class_name => 'Authentify::User'
     belongs_to :order, :class_name => ProductionOrderx.order_class.to_s
     belongs_to :part, :class_name => ProductionOrderx.part_class.to_s
-    has_many :production_steps, :class_name => ProductionOrderx.production_step_class.to_s
+    has_many :production_steps, :class_name => 'ProductionOrderx::ProductionStep'
     
     validates :part_name, :qty, :start_date, :finish_date, :fort_token, :presence => true 
     validates :qty, :numericality => {:greater_than => 0}
@@ -20,6 +20,7 @@ module ProductionOrderx
     validates :order_id, :numericality => {:greater_than => 0}, :if => 'order_id.present?'
     validates :part_id, :numericality => {:greater_than => 0}, :if => 'part_id.present?'
     validates :qty_produced, :numericality => {:greater_than_or_equal_to => 0}, :if => 'qty_produced.present?'
+    #validates :material_cost, :numericality => {:greater_than_or_equal_to => 0}, :if => 'material_cost.present?'
     
     validate :dynamic_validate 
     
@@ -29,5 +30,15 @@ module ProductionOrderx
       wf = Authentify::AuthentifyUtility.find_config_const('dynamic_validate_part_production', self.fort_token, 'production_orderx')
       eval(wf) if wf.present?
     end
+    
+    def cal_cost_total
+      total = 0.00
+      total += material_cost if material_cost.present?
+      ProductionStep.where(part_production_id: self.id).each do |r|
+        total += r.operators.inject(0){|s, a| s + a.hours_spent * a.hourly_rate}
+      end
+      return total
+    end
+    
   end
 end

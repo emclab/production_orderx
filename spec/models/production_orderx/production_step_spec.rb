@@ -38,9 +38,9 @@ module ProductionOrderx
       expect(c).not_to be_valid
     end
     
-    it "should rejectnil ontime_indicator" do
+    it "should take nil ontime_indicator" do
       c = FactoryGirl.build(:production_orderx_production_step, :ontime_indicator => nil)
-      expect(c).not_to be_valid
+      expect(c).to be_valid
     end
   end
 end

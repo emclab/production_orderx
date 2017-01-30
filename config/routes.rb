@@ -1,5 +1,7 @@
 ProductionOrderx::Engine.routes.draw do
   
+  resources :operators
+
   resources :production_steps
   resources :part_productions do
     collection do

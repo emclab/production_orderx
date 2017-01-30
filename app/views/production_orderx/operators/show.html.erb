@@ -1,0 +1,63 @@
+<% if  @erb_code %>
+  <%= render inline: ERB.new(@erb_code).result(binding) %>
+  
+<% else %>
+<div class="container">
+   <div class="page-header clearfix">
+      <div class="pull-left">
+        <h2><%=@title%></h2>
+      </div>
+   </div>
+ <div class="row">
+    <div class="col-sm-<%=BUTTONS_CLS['left-span#']%> form-group">
+       <b><%= t('Name') %></b>
+    </div>
+    <div class="col-sm-<%=BUTTONS_CLS['right-span#']%> form-group">
+    	<%= @operator.name %>
+    </div>
+   </div>
+ <div class="row">
+    <div class="col-sm-<%=BUTTONS_CLS['left-span#']%> form-group">
+       <b><%= t('Hours Spent(H)') %></b>
+    </div>
+    <div class="col-sm-<%=BUTTONS_CLS['right-span#']%> form-group">
+    	<%= number_with_precision(@operator.hours_spent, :precision => 2, :separator => '.') %>
+    </div>
+   </div>
+ <% unless noshow?(@operator, 'hourly_rate') %>
+ <div class="row">
+    <div class="col-sm-<%=BUTTONS_CLS['left-span#']%> form-group">
+       <b><%= t('Hourly Rate($)') %></b>
+    </div>
+    <div class="col-sm-<%=BUTTONS_CLS['right-span#']%> form-group">
+    	<%= number_with_precision(@operator.hourly_rate, :precision => 2, :separator => '.') %>
+    </div>
+  </div>
+  <% end %>
+   <div class="row">
+     <div class="col-sm-<%=BUTTONS_CLS['left-span#']%> form-group"> 
+          <b><%= t('Brief Note') %></b>
+     </div>
+     <div class="col-sm-<%=BUTTONS_CLS['right-span#']%> form-group">
+     	<%= @operator.brief_note %>
+     </div>
+   </div>
+   <div class="row">
+     <div class="col-sm-<%=BUTTONS_CLS['left-span#']%> form-group">
+          <b><%= t('Last Updated By') %></b>
+     </div>
+     <div class="col-sm-<%=BUTTONS_CLS['right-span#']%> form-group">
+          <%= @operator.last_updated_by.try(:name) %>
+     </div>
+   </div>
+
+   <div class="row">
+          <%= link_to t('Back'), SUBURI + "/view_handler?index=0", :id => 'close', :class => BUTTONS_CLS['action'] %>
+          <%= link_to t('Delete'), operator_path(@operator), :method => :delete, data: {:confirm => I18n.t('Delete the record?')}, :id => 'btn4_link', :class => BUTTONS_CLS['danger'] if has_action_right?('destroy', params[:controller], @operator) %> 
+                   
+    </div>
+
+</div>
+
+
+<% end %>
