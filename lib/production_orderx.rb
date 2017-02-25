@@ -1,7 +1,7 @@
 require "production_orderx/engine"
 
 module ProductionOrderx
-  mattr_accessor :part_class, :order_class
+  mattr_accessor :part_class, :order_class, :human_resource_class
   
   def self.part_class
     @@part_class.constantize
@@ -11,4 +11,7 @@ module ProductionOrderx
     @@order_class.constantize
   end
  
+  def self.human_resource_class
+    @@human_resource_class
+  end
 end
